@@ -1,0 +1,85 @@
+@inject toursandtravels.Services.ICurrencyService Currency
+@model toursandtravels.Models.Tour
+@{
+	ViewData["Title"] = Model.Title;
+}
+
+<div class="row g-4">
+	<div class="col-md-7">
+		<img class="img-fluid rounded" src="@(!string.IsNullOrWhiteSpace(Model.HeroImageUrl) ? Model.HeroImageUrl : "/images/placeholder.svg")" alt="@Model.Title" onerror="this.onerror=null;this.src='/images/placeholder.svg';" />
+		<h2 class="mt-3">@Model.Title</h2>
+		<p class="text-muted mb-1">Destination: @Model.Destination</p>
+		<p>@Model.Summary</p>
+		<h5>Highlights</h5>
+		<ul>
+			@foreach (var h in Model.Highlights)
+			{
+				<li>@h</li>
+			}
+		</ul>
+	</div>
+	<div class="col-md-5">
+		<div class="card">
+			<div class="card-body">
+				<div class="fs-4 fw-bold">@Currency.Format(Model.PricePerPerson, Currency.GetCurrency(Context))</div>
+				<div class="text-muted">@Model.DurationDays days</div>
+				<a class="btn btn-primary w-100 mt-3" href="@Url.Action("Create", "Booking", new { tourId = Model.Id })">Book Now</a>
+				<form method="post" action="@Url.Action("Add", "Wishlist", new { id = Model.Id, returnUrl = Context.Request.Path + Context.Request.QueryString })" class="mt-2">
+					<button class="btn btn-outline-secondary w-100" type="submit">Add to Wishlist</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="mt-4">
+	<h5>Map</h5>
+	<div class="ratio ratio-16x9">
+		<iframe
+			src="https://www.google.com/maps?q=@(ViewBag.MapQuery ?? "India")&output=embed"
+			style="border:0;"
+			allowfullscreen
+			loading="lazy">
+		</iframe>
+	</div>
+</div>
+
+<div class="mt-5">
+	<h5>Reviews</h5>
+	@if (ViewBag.Reviews != null)
+	{
+		foreach (var r in (IEnumerable<toursandtravels.Models.Review>)ViewBag.Reviews)
+		{
+			<div class="border rounded p-3 mb-2">
+				<div class="d-flex justify-content-between">
+					<strong>@r.Author</strong>
+					<span>@r.Rating ★</span>
+				</div>
+				<div>@r.Comment</div>
+				<small class="text-muted">@r.CreatedAt.ToString("yyyy-MM-dd")</small>
+			</div>
+		}
+	}
+
+	<form method="post" action="@Url.Action("AddReview", new { id = Model.Id })" class="mt-3">
+		<div class="row g-3">
+			<div class="col-md-4">
+				<label class="form-label">Name</label>
+				<input name="Author" class="form-control" required />
+			</div>
+			<div class="col-md-2">
+				<label class="form-label">Rating</label>
+				<input name="Rating" type="number" min="1" max="5" class="form-control" value="5" />
+			</div>
+			<div class="col-12">
+				<label class="form-label">Comment</label>
+				<textarea name="Comment" class="form-control" rows="3" required></textarea>
+			</div>
+			<div class="col-12">
+				<button class="btn btn-outline-primary">Submit Review</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+

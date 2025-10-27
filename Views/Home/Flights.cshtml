@@ -1,0 +1,33 @@
+@{
+	ViewData["Title"] = "Flights";
+}
+
+<h2 class="mb-4">Search Flights</h2>
+
+<form method="get" action="@Url.Action("Results")" class="row g-3 p-4 bg-white rounded-3 shadow-sm">
+	<div class="col-md-3">
+		<label class="form-label">From</label>
+		<input name="from" class="form-control" placeholder="Mumbai (BOM)" required />
+	</div>
+	<div class="col-md-3">
+		<label class="form-label">To</label>
+		<input name="to" class="form-control" placeholder="Delhi (DEL)" required />
+	</div>
+	<div class="col-md-3">
+		<label class="form-label">Departure</label>
+		<input type="date" name="depart" class="form-control" required />
+	</div>
+	<div class="col-md-3">
+		<label class="form-label">Return</label>
+		<input type="date" name="return" class="form-control" />
+	</div>
+	<div class="col-md-3">
+		<label class="form-label">Travellers</label>
+		<input type="number" min="1" value="1" name="travellers" class="form-control" />
+	</div>
+	<div class="col-12 d-grid d-md-block">
+		<button class="btn btn-primary btn-lg"><i class="bi bi-search me-1"></i>Search</button>
+	</div>
+</form>
+
+

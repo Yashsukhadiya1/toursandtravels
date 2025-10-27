@@ -1,0 +1,32 @@
+@{
+	ViewData["Title"] = "Payment";
+}
+
+<div class="text-center py-5">
+	<h2>Payment</h2>
+	<p class="text-muted">Test payment via Razorpay Checkout.</p>
+	<button id="rzp-btn" class="btn btn-success">Pay Now</button>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  const options = {
+    key: '@ViewBag.RazorpayKey',
+    amount: '@((int)((decimal)ViewBag.Amount * 100))',
+    currency: '@ViewBag.Currency',
+    name: 'TripMate',
+    description: 'Booking Payment',
+    order_id: '@ViewBag.OrderId',
+    handler: function (response) {
+      fetch('@Url.Action("Complete")?bookingId=@ViewBag.BookingId', { method: 'POST' })
+        .then(() => window.location.href = '@Url.Action("Confirmation", "Booking", new { id = ViewBag.BookingId })');
+    },
+    theme: { color: '#0a2a43' }
+  };
+  document.getElementById('rzp-btn').onclick = function () {
+    const rzp = new Razorpay(options);
+    rzp.open();
+  };
+</script>
+
+

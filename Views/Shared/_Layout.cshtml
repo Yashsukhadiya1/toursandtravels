@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>@ViewData["Title"] - Tours & Travels</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+	<link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body>
+	<header class="mmt-top">
+		<div class="container d-flex align-items-center justify-content-between py-2">
+			<a class="navbar-brand fw-bold text-white" href="@Url.Action("Index", "Home")">
+				<i class="bi bi-airplane-fill me-2"></i>TripMate
+			</a>
+			<nav class="d-none d-lg-flex gap-4 text-white-50">
+				<a class="link-light text-decoration-none" href="@Url.Action("Index", "Tours")"><i class="bi bi-map me-1"></i>Tours</a>
+				<a class="link-light text-decoration-none" href="@Url.Action("Bookings", "Admin")"><i class="bi bi-shield-check me-1"></i>Admin</a>
+				<div class="dropdown">
+					<a class="link-light text-decoration-none dropdown-toggle" href="#" data-bs-toggle="dropdown">Currency</a>
+					<ul class="dropdown-menu dropdown-menu-end">
+						<li>
+							<form method="post" action="@Url.Action("Set", "Currency", new { returnUrl = Context.Request.Path + Context.Request.QueryString })" class="px-3 py-1">
+								<button name="code" value="INR" class="dropdown-item" type="submit">INR</button>
+								<button name="code" value="USD" class="dropdown-item" type="submit">USD</button>
+								<button name="code" value="EUR" class="dropdown-item" type="submit">EUR</button>
+							</form>
+						</li>
+					</ul>
+				</div>
+				<a class="link-light text-decoration-none" href="@Url.Action("Index", "Wishlist")"><i class="bi bi-heart me-1"></i>Wishlist</a>
+				<a class="link-light text-decoration-none" href="@Url.Action("List", "Booking")"><i class="bi bi-receipt me-1"></i>My Bookings</a>
+				@if (toursandtravels.Controllers.AccountController.GetCurrentUser(Context) == null)
+				{
+					<a class="btn btn-outline-light btn-sm" href="@Url.Action("Login", "Account", new { returnUrl = Context.Request.Path + Context.Request.QueryString })">Login</a>
+				}
+				else
+				{
+					<a class="btn btn-outline-light btn-sm" href="@Url.Action("Logout", "Account", new { returnUrl = Context.Request.Path + Context.Request.QueryString })">Logout</a>
+				}
+			</nav>
+		</div>
+	</header>
+
+	<main class="container my-4">
+		@RenderBody()
+	</main>
+
+	<footer class="mmt-footer mt-5">
+		<div class="container py-4">
+			<div class="row">
+				<div class="col-md-4 mb-3">
+					<div class="fw-bold mb-2 text-white">TripMate</div>
+					<p class="text-white-50 small">Plan flights, hotels and tours with seamless booking and support.</p>
+				</div>
+			<div class="col-md-4 mb-3">
+				<div class="fw-bold mb-2 text-white">Quick Links</div>
+				<ul class="list-unstyled text-white-50 small">
+					<li><a class="link-light text-decoration-none" href="@Url.Action("Index", "Tours")">Tours</a></li>
+					<li><a class="link-light text-decoration-none" href="@Url.Action("List", "Booking")">My Bookings</a></li>
+					<li><a class="link-light text-decoration-none" href="@Url.Action("Bookings", "Admin")">Admin</a></li>
+				</ul>
+			</div>
+				<div class="col-md-4">
+					<div class="fw-bold mb-2 text-white">Follow</div>
+					<div class="d-flex gap-3 fs-4">
+						<a class="link-light" href="#"><i class="bi bi-instagram"></i></a>
+						<a class="link-light" href="#"><i class="bi bi-twitter-x"></i></a>
+						<a class="link-light" href="#"><i class="bi bi-linkedin"></i></a>
+						<a class="link-light" href="#"><i class="bi bi-facebook"></i></a>
+					</div>
+				</div>
+			</div>
+			<div class="text-center text-white-50 small mt-3">© @DateTime.UtcNow.Year TripMate Pvt. Ltd.</div>
+		</div>
+	</footer>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	@RenderSection("Scripts", required: false)
+</body>
+</html>
+
+

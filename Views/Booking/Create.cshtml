@@ -1,0 +1,39 @@
+@model toursandtravels.Models.Booking
+@{
+	ViewData["Title"] = "Book Tour";
+}
+
+<h2 class="mb-4">Book Tour</h2>
+
+<form method="post">
+	<input type="hidden" asp-for="TourId" />
+	<div class="row g-3">
+		<div class="col-md-6">
+			<label asp-for="FullName" class="form-label"></label>
+			<input asp-for="FullName" class="form-control" />
+			<span asp-validation-for="FullName" class="text-danger"></span>
+		</div>
+		<div class="col-md-6">
+			<label asp-for="Email" class="form-label"></label>
+			<input asp-for="Email" class="form-control" />
+			<span asp-validation-for="Email" class="text-danger"></span>
+		</div>
+		<div class="col-md-4">
+			<label asp-for="StartDate" class="form-label"></label>
+			<input asp-for="StartDate" class="form-control" type="date" />
+			<span asp-validation-for="StartDate" class="text-danger"></span>
+		</div>
+		<div class="col-md-4">
+			<label asp-for="Travellers" class="form-label"></label>
+			<input asp-for="Travellers" class="form-control" type="number" min="1" />
+			<span asp-validation-for="Travellers" class="text-danger"></span>
+		</div>
+		<div class="col-12">
+			<button class="btn btn-primary me-2" name="action" value="continue">Continue</button>
+			<button class="btn btn-success" name="action" value="pay">Book & Pay</button>
+			<a class="btn btn-secondary" href="@Url.Action("Index", "Tours")">Cancel</a>
+		</div>
+	</div>
+</form>
+
+

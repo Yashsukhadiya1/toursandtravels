@@ -1,0 +1,43 @@
+@model IEnumerable<dynamic>
+@{
+	ViewData["Title"] = "My Bookings";
+}
+
+<h2 class="mb-4">My Bookings</h2>
+
+@if (!Model.Any())
+{
+	<div class="alert alert-info">No bookings yet.</div>
+}
+else
+{
+	<div class="table-responsive">
+		<table class="table align-middle">
+			<thead>
+				<tr>
+					<th>Booking ID</th>
+					<th>Tour</th>
+					<th>Start Date</th>
+					<th>Travellers</th>
+					<th>Total</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>@item.Booking.Id</td>
+						<td>@item.Tour?.Title</td>
+						<td>@item.Booking.StartDate.ToString("yyyy-MM-dd")</td>
+						<td>@item.Booking.Travellers</td>
+						<td>₹ @item.Booking.TotalAmount</td>
+						<td><a class="btn btn-sm btn-outline-primary" href="@Url.Action("Confirmation", new { id = item.Booking.Id })">View</a></td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
+

@@ -1,0 +1,27 @@
+@model toursandtravels.Models.Booking
+@{
+	ViewData["Title"] = "Booking Confirmation";
+}
+
+<div class="text-center py-5">
+	<h2>Thank you, @Model.FullName!</h2>
+	<p class="text-muted">Your booking request has been received.</p>
+	<div class="card mx-auto" style="max-width: 600px;">
+		<div class="card-body text-start">
+			<p><strong>Booking ID:</strong> @Model.Id</p>
+			@if (ViewBag.Tour != null)
+			{
+				<p><strong>Tour:</strong> @ViewBag.Tour.Title</p>
+				<p><strong>Start Date:</strong> @Model.StartDate.ToString("yyyy-MM-dd")</p>
+				<p><strong>Travellers:</strong> @Model.Travellers</p>
+				<p><strong>Total:</strong> ₹ @Model.TotalAmount</p>
+			}
+			<div class="d-flex gap-2">
+				<a class="btn btn-success" href="@Url.Action("Start", "Payment", new { bookingId = Model.Id })">Proceed to Payment</a>
+				<a class="btn btn-primary" href="@Url.Action("Index", "Tours")">Back to Tours</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+

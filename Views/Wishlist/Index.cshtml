@@ -1,0 +1,33 @@
+@model IEnumerable<toursandtravels.Models.Tour>
+@{
+	ViewData["Title"] = "Wishlist";
+}
+
+<h2 class="mb-4">Your Wishlist</h2>
+
+@if (!Model.Any())
+{
+	<div class="alert alert-info">No items yet.</div>
+}
+else
+{
+	<div class="list-group">
+		@foreach (var t in Model)
+		{
+			<div class="list-group-item d-flex justify-content-between align-items-center">
+				<div>
+					<div class="fw-semibold">@t.Title</div>
+					<small class="text-muted">@t.Destination</small>
+				</div>
+				<div class="d-flex gap-2">
+					<a class="btn btn-sm btn-outline-primary" href="@Url.Action("Details", "Tours", new { id = t.Id })">View</a>
+					<form method="post" action="@Url.Action("Remove", new { id = t.Id, returnUrl = Context.Request.Path + Context.Request.QueryString })">
+						<button class="btn btn-sm btn-outline-danger">Remove</button>
+					</form>
+				</div>
+			</div>
+		}
+	</div>
+}
+
+

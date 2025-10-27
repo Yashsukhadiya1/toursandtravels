@@ -1,0 +1,107 @@
+@model IEnumerable<dynamic>
+@{
+	ViewData["Title"] = "Admin - Bookings";
+	var unreadCount = ViewBag.UnreadCount ?? 0;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+	<h2>All Bookings</h2>
+	<div class="d-flex gap-2">
+		<a href="@Url.Action("Notifications", "Admin")" class="btn btn-outline-primary position-relative">
+			<i class="bi bi-bell"></i> Notifications
+			@if (unreadCount > 0)
+			{
+				<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">@unreadCount</span>
+			}
+		</a>
+	</div>
+</div>
+
+@if (!Model.Any())
+{
+	<div class="alert alert-info">No bookings yet.</div>
+}
+else
+{
+	<div class="table-responsive">
+		<table class="table table-striped align-middle">
+			<thead class="table-dark">
+				<tr>
+					<th>Booking ID</th>
+					<th>Customer Name</th>
+					<th>Email</th>
+					<th>Tour</th>
+					<th>Start Date</th>
+					<th>Travellers</th>
+					<th>Total Amount</th>
+					<th>Status</th>
+					<th>Created At</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr data-booking-id="@item.Booking.Id">
+						<td><small>@item.Booking.Id.ToString()[..8]</small></td>
+						<td>@item.Booking.FullName</td>
+						<td>@item.Booking.Email</td>
+						<td>@item.Tour?.Title</td>
+						<td>@item.Booking.StartDate.ToString("yyyy-MM-dd")</td>
+						<td>@item.Booking.Travellers</td>
+						<td>₹ @item.Booking.TotalAmount.ToString("N2")</td>
+						<td>
+							<select class="form-select form-select-sm status-select" data-booking-id="@item.Booking.Id">
+								<option value="Pending" selected="@(item.Booking.Status == "Pending")">Pending</option>
+								<option value="Confirmed" selected="@(item.Booking.Status == "Confirmed")">Confirmed</option>
+								<option value="Cancelled" selected="@(item.Booking.Status == "Cancelled")">Cancelled</option>
+								<option value="Completed" selected="@(item.Booking.Status == "Completed")">Completed</option>
+							</select>
+						</td>
+						<td><small>@item.Booking.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small></td>
+						<td>
+							<a href="@Url.Action("Details", "Booking", new { id = item.Booking.Id })" class="btn btn-sm btn-outline-primary">View Details</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
+@section Scripts {
+	<script>
+		document.querySelectorAll('.status-select').forEach(select => {
+			select.addEventListener('change', function() {
+				const bookingId = this.dataset.bookingId;
+				const status = this.value;
+				
+				fetch('@Url.Action("UpdateBookingStatus", "Admin")', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: `bookingId=${bookingId}&status=${encodeURIComponent(status)}`
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						showNotification('Status updated successfully', 'success');
+					} else {
+						showNotification('Failed to update status', 'error');
+					}
+				});
+			});
+		});
+
+		function showNotification(message, type) {
+			const alertDiv = document.createElement('div');
+			alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed top-0 end-0 m-3`;
+			alertDiv.style.zIndex = '9999';
+			alertDiv.textContent = message;
+			document.body.appendChild(alertDiv);
+			setTimeout(() => alertDiv.remove(), 3000);
+		}
+	</script>
+}
+
