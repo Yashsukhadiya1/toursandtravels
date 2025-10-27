@@ -198,7 +198,3 @@ This project is created for educational purposes as part of a .NET course assign
 ## 👨‍💻 Developer
 
 Created as part of 5th Semester .NET coursework.
-
----
-
-**Happy Traveling with TripMate! ✈️🏖️🗻**
